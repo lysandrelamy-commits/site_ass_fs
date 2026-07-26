@@ -1,0 +1,509 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Résultats & Transparence — Formul'UT</title>
+<meta name="description" content="Palmarès en compétition et répartition transparente du budget de l'écurie Formul'UT." />
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Archivo:wght@400;500;600;700;800;900&family=Inter:wght@300;400;500;600;700&display=swap');
+
+:root {
+  /* Sober, near-monochrome — one muted accent, used sparingly */
+  --ink:        #0A0A0C;
+  --ink-90:     rgba(10,10,12,0.9);
+  --ink-70:     rgba(10,10,12,0.66);
+  --ink-40:     rgba(10,10,12,0.40);
+  --ink-15:     rgba(10,10,12,0.13);
+  --ink-08:     rgba(10,10,12,0.06);
+  --paper:      #FFFFFF;
+  --paper-off:  #FAFAF8;
+  --white:      #FFFFFF;
+  --navy:       #1B3FA0;
+  --line:       rgba(10,10,12,0.11);
+  --line-light: rgba(255,255,255,0.16);
+  --accent:     #FFC600;
+  --accent-dim: rgba(255,198,0,0.14);
+
+  --radius-sm: 3px; --radius-md: 6px; --radius-lg: 10px; --radius-full: 999px;
+  --shadow-sm: 0 1px 3px rgba(10,10,12,0.05);
+  --shadow-md: 0 10px 28px rgba(10,10,12,0.08);
+
+  --font-display: 'Archivo', sans-serif;
+  --font-body: 'Inter', sans-serif;
+
+  --nav-h: 76px;
+  --max-w: 1280px;
+
+  /* Backward-compatible aliases so subpages keep coherent styling
+     under the new sober palette until they're individually redesigned */
+  --cream: var(--paper-off);
+  --blue: var(--navy);
+  --blue-mid: #16327F;
+  --blue-light: #3E63C4;
+  --blue-pale: rgba(27,63,160,0.06);
+  --yellow: var(--accent);
+  --yellow-dark: #C79A00;
+  --yellow-pale: var(--accent-dim);
+  --ink-06: var(--ink-08);
+  --ink-12: var(--ink-15);
+  --radius-xl: 16px;
+  --shadow-lg: 0 24px 64px rgba(10,10,12,0.12);
+}
+
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+html { scroll-behavior: smooth; font-size: 16px; }
+body { font-family: var(--font-body); background: var(--paper); color: var(--ink); line-height: 1.6; overflow-x: hidden; -webkit-font-smoothing: antialiased; }
+a { color: inherit; text-decoration: none; }
+img { max-width: 100%; display: block; }
+button { cursor: pointer; border: none; background: none; font-family: inherit; }
+
+.container { max-width: var(--max-w); margin: 0 auto; padding: 0 32px; }
+.section { padding: 110px 0; }
+
+h1, h2, h3, h4 { font-family: var(--font-display); line-height: 1.08; letter-spacing: -0.01em; font-weight: 600; }
+.display-lg { font-size: clamp(2.1rem, 3.6vw, 3rem); font-weight: 600; }
+
+.eyebrow {
+  display: flex; align-items: center; gap: 10px;
+  font-family: var(--font-display); font-size: 12.5px; font-weight: 600;
+  letter-spacing: 0.16em; text-transform: uppercase; color: var(--ink-40);
+  margin-bottom: 18px;
+}
+.eyebrow::before { content: ''; width: 22px; height: 1px; background: var(--accent); }
+.eyebrow.on-dark { color: rgba(255,255,255,0.5); }
+.eyebrow.on-dark::before { background: var(--accent); }
+
+.text-muted { color: var(--ink-70); }
+
+.btn {
+  display: inline-flex; align-items: center; gap: 9px; padding: 15px 30px;
+  font-family: var(--font-display); font-size: 14px; font-weight: 600; letter-spacing: 0.02em;
+  border: 1px solid transparent; border-radius: var(--radius-sm);
+  transition: all 0.22s ease; white-space: nowrap;
+}
+.btn-primary { background: var(--ink); color: var(--white); border-color: var(--ink); }
+.btn-primary:hover { background: #262629; }
+.btn-outline { background: transparent; color: var(--ink); border-color: var(--ink-15); }
+.btn-outline:hover { border-color: var(--ink); }
+.btn-outline-light { background: transparent; color: var(--white); border-color: rgba(255,255,255,0.28); }
+.btn-outline-light:hover { border-color: var(--white); }
+.btn-lg { padding: 17px 36px; font-size: 15px; }
+.btn-sm { padding: 10px 20px; font-size: 12.5px; }
+
+.tag { display: inline-flex; align-items: center; gap: 6px; padding: 5px 12px; border-radius: var(--radius-sm); font-family: var(--font-display); font-size: 11px; font-weight: 600; letter-spacing: 0.08em; text-transform: uppercase; border: 1px solid; }
+.tag-thermo { color: #8A4B12; border-color: rgba(138,75,18,0.3); background: rgba(138,75,18,0.06); }
+.tag-elec { color: #17654A; border-color: rgba(23,101,74,0.3); background: rgba(23,101,74,0.06); }
+.tag-news { color: var(--ink-70); border-color: var(--ink-15); background: var(--ink-08); }
+
+/* ── NAV ── */
+.nav { position: fixed; top: 0; left: 0; right: 0; z-index: 1000; height: var(--nav-h); display: flex; align-items: center; transition: all 0.3s ease; border-bottom: 1px solid transparent; }
+.nav.transparent { background: transparent; }
+.nav.solid { background: rgba(247,246,243,0.94); backdrop-filter: blur(16px); border-bottom-color: var(--line); }
+.nav-inner { width: 100%; max-width: var(--max-w); margin: 0 auto; padding: 0 32px; display: flex; align-items: center; gap: 40px; }
+.nav-logo { display: flex; align-items: center; gap: 12px; font-family: var(--font-display); font-size: 19px; font-weight: 700; color: var(--ink); letter-spacing: -0.01em; flex-shrink: 0; }
+.nav-logo-icon { width: 34px; height: 34px; border: 1.5px solid var(--ink); border-radius: var(--radius-sm); display: flex; align-items: center; justify-content: center; }
+.nav-logo-icon svg { width: 18px; height: 18px; }
+.nav-links { display: flex; align-items: center; gap: 4px; flex: 1; list-style: none; }
+.nav-links a { display: block; padding: 8px 14px; font-family: var(--font-display); font-size: 13px; font-weight: 500; letter-spacing: 0.01em; color: var(--ink-70); transition: color 0.2s; position: relative; }
+.nav-links a::after { content: ''; position: absolute; left: 14px; right: 14px; bottom: 2px; height: 1px; background: var(--ink); transform: scaleX(0); transition: transform 0.2s; }
+.nav-links a:hover, .nav-links a.active { color: var(--ink); }
+.nav-links a:hover::after, .nav-links a.active::after { transform: scaleX(1); }
+.nav-end { display: flex; align-items: center; gap: 10px; margin-left: auto; }
+.nav-burger { display: none; flex-direction: column; gap: 5px; padding: 8px; }
+.nav-burger span { display: block; width: 22px; height: 1.5px; background: var(--ink); }
+
+.mobile-nav { display: none; position: fixed; top: var(--nav-h); left: 0; right: 0; background: var(--paper); border-top: 1px solid var(--line); padding: 8px 24px 20px; z-index: 999; flex-direction: column; }
+.mobile-nav.open { display: flex; }
+.mobile-nav a { display: block; padding: 14px 4px; border-bottom: 1px solid var(--line); font-family: var(--font-display); font-weight: 500; font-size: 16px; color: var(--ink); }
+.mobile-nav-cta { margin-top: 16px; }
+
+/* ── FOOTER ── */
+.footer { background: var(--ink); color: var(--white); padding: 80px 0 32px; }
+.footer-grid { display: grid; grid-template-columns: 2fr 1fr 1fr 1fr; gap: 48px; margin-bottom: 64px; }
+.footer-brand p { color: rgba(255,255,255,0.5); font-size: 14px; line-height: 1.7; margin-top: 18px; max-width: 260px; }
+.footer-logo-text { font-family: var(--font-display); font-size: 21px; font-weight: 700; letter-spacing: -0.01em; }
+.footer-social { display: flex; gap: 8px; margin-top: 26px; }
+.social-pill { display: flex; align-items: center; gap: 6px; padding: 8px 16px; border: 1px solid rgba(255,255,255,0.16); border-radius: var(--radius-sm); font-family: var(--font-display); font-size: 12px; font-weight: 500; color: rgba(255,255,255,0.65); transition: all 0.2s; }
+.social-pill:hover { border-color: rgba(255,255,255,0.5); color: var(--white); }
+.footer-col h4 { font-family: var(--font-display); font-size: 11px; letter-spacing: 0.14em; text-transform: uppercase; color: rgba(255,255,255,0.35); font-weight: 600; margin-bottom: 20px; }
+.footer-col ul { list-style: none; display: flex; flex-direction: column; gap: 12px; }
+.footer-col ul a { font-size: 14px; color: rgba(255,255,255,0.6); transition: color 0.2s; }
+.footer-col ul a:hover { color: var(--white); }
+.footer-bottom { border-top: 1px solid rgba(255,255,255,0.1); padding-top: 26px; display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 12px; }
+.footer-bottom p { font-size: 12.5px; color: rgba(255,255,255,0.35); }
+
+.reveal { opacity: 0; transform: translateY(22px); transition: opacity 0.6s ease, transform 0.6s ease; }
+.reveal.visible { opacity: 1; transform: none; }
+.reveal-delay-1 { transition-delay: 0.08s; } .reveal-delay-2 { transition-delay: 0.16s; } .reveal-delay-3 { transition-delay: 0.24s; }
+
+.page-hero { background: var(--navy); padding: calc(var(--nav-h) + 70px) 0 90px; }
+.page-hero-eyebrow { display: inline-flex; align-items: center; gap: 10px; font-family: var(--font-display); font-size: 12.5px; font-weight: 600; letter-spacing: 0.16em; text-transform: uppercase; color: rgba(255,255,255,0.5); margin-bottom: 22px; }
+.page-hero-eyebrow::before { content: ''; width: 22px; height: 1px; background: var(--accent); }
+.page-hero h1 { font-family: var(--font-display); font-size: clamp(2.6rem, 5vw, 4.2rem); font-weight: 600; color: var(--white); letter-spacing: -0.02em; margin-bottom: 20px; }
+.page-hero-sub { font-size: 17px; color: rgba(255,255,255,0.6); line-height: 1.7; max-width: 560px; }
+
+@media (max-width: 900px) {
+  .nav-links, .nav-end .btn { display: none; }
+  .nav-burger { display: flex; margin-left: auto; }
+  .footer-grid { grid-template-columns: 1fr 1fr; gap: 36px; }
+  .section { padding: 76px 0; }
+}
+@media (max-width: 600px) {
+  .footer-grid { grid-template-columns: 1fr; }
+  .section { padding: 56px 0; }
+}
+@media (prefers-reduced-motion: reduce) { *, .reveal { transition: none !important; animation: none !important; } }
+
+</style>
+<style>
+.blob-r1 { width: 500px; height: 500px; background: radial-gradient(circle, rgba(245,200,0,0.1) 0%, transparent 70%); top: -120px; right: -100px; }
+
+/* ── PALMARÈS ── */
+.palmares-section { background: var(--cream); padding: 80px 0; }
+.palmares-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 20px; margin-top: 48px; }
+.result-card { background: var(--white); border-radius: var(--radius-xl); border: 1.5px solid var(--ink-06); box-shadow: var(--shadow-sm); overflow: hidden; transition: all 0.3s; }
+.result-card:hover { box-shadow: var(--shadow-md); transform: translateY(-5px); }
+.result-photo { height: 180px; background: linear-gradient(135deg, var(--blue-pale), rgba(245,200,0,0.15)); display: flex; align-items: center; justify-content: center; color: var(--ink-40); font-size: 14px; text-align: center; padding: 16px; font-family: var(--font-display); position: relative; }
+.result-rank-badge { position: absolute; top: 16px; right: 16px; background: var(--yellow); color: var(--blue); font-family: var(--font-display); font-weight: 900; font-size: 13px; padding: 6px 14px; border-radius: var(--radius-full); box-shadow: var(--shadow-sm); }
+.result-body { padding: 24px; }
+.result-year { font-family: var(--font-display); font-size: 12px; font-weight: 700; color: var(--ink-40); text-transform: uppercase; letter-spacing: 0.08em; margin-bottom: 6px; }
+.result-title { font-family: var(--font-display); font-size: 1.2rem; font-weight: 800; color: var(--ink); margin-bottom: 12px; }
+.result-stats { display: flex; gap: 16px; flex-wrap: wrap; }
+.result-stat { }
+.result-stat-val { font-family: var(--font-display); font-size: 1.1rem; font-weight: 800; color: var(--blue); }
+.result-stat-key { font-size: 11px; color: var(--ink-40); text-transform: uppercase; letter-spacing: 0.06em; }
+
+/* ── STATS RECAP ── */
+.recap-section { background: var(--blue); padding: 72px 0; position: relative; overflow: hidden; }
+.recap-blob { width: 500px; height: 500px; background: radial-gradient(circle, rgba(245,200,0,0.1) 0%, transparent 70%); top: -150px; left: -100px; }
+.recap-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 24px; position: relative; z-index: 2; }
+.recap-item { text-align: center; }
+.recap-val { font-family: var(--font-display); font-size: 3rem; font-weight: 900; color: var(--yellow); line-height: 1; margin-bottom: 8px; }
+.recap-lbl { font-size: 14px; color: rgba(255,255,255,0.6); }
+
+/* ── BUDGET ── */
+.budget-section { background: var(--white); padding: 90px 0; }
+.budget-intro { text-align: center; margin-bottom: 56px; max-width: 620px; margin-left: auto; margin-right: auto; }
+.budget-total-card {
+  background: var(--blue); border-radius: var(--radius-xl); padding: 40px; text-align: center; color: var(--white); margin-bottom: 48px; position: relative; overflow: hidden;
+}
+.budget-total-blob { width: 350px; height: 350px; background: radial-gradient(circle, rgba(245,200,0,0.12) 0%, transparent 70%); top: -100px; right: -60px; }
+.budget-total-label { font-family: var(--font-display); font-size: 13px; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase; color: rgba(255,255,255,0.5); margin-bottom: 10px; position: relative; z-index: 1; }
+.budget-total-val { font-family: var(--font-display); font-size: 3.6rem; font-weight: 900; color: var(--yellow); letter-spacing: -0.02em; position: relative; z-index: 1; }
+.budget-total-sub { font-size: 14px; color: rgba(255,255,255,0.55); margin-top: 8px; position: relative; z-index: 1; }
+
+.budget-breakdown { display: flex; flex-direction: column; gap: 18px; }
+.budget-row { display: grid; grid-template-columns: 220px 1fr 100px; align-items: center; gap: 20px; }
+.budget-row-label { display: flex; align-items: center; gap: 12px; font-family: var(--font-display); font-weight: 700; font-size: 15px; color: var(--ink); }
+.budget-row-icon { width: 36px; height: 36px; border-radius: var(--radius-md); display: flex; align-items: center; justify-content: center; font-size: 16px; flex-shrink: 0; }
+.budget-bar-track { background: var(--cream); border-radius: var(--radius-full); height: 16px; overflow: hidden; border: 1.5px solid var(--ink-06); }
+.budget-bar-fill { height: 100%; border-radius: var(--radius-full); }
+.budget-row-pct { font-family: var(--font-display); font-weight: 900; font-size: 16px; color: var(--blue); text-align: right; }
+.budget-row-amount { font-size: 12px; color: var(--ink-40); text-align: right; }
+
+.budget-note { background: var(--yellow-pale); border: 1.5px solid rgba(245,200,0,0.4); border-radius: var(--radius-lg); padding: 20px 24px; margin-top: 40px; display: flex; gap: 16px; align-items: flex-start; }
+.budget-note-icon { font-size: 22px; flex-shrink: 0; }
+.budget-note p { font-size: 14px; color: var(--ink); line-height: 1.6; }
+
+@media (max-width: 900px) { .recap-grid { grid-template-columns: repeat(2, 1fr); gap: 20px; } .budget-row { grid-template-columns: 1fr; gap: 8px; } .budget-row-pct { text-align: left; } }
+</style>
+</head>
+<body>
+
+<nav class="nav transparent" id="navbar">
+  <div class="nav-inner">
+    <a href="../index.html" class="nav-logo">
+      <div class="nav-logo-icon">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 17l4-8 4 4 4-6 4 10" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      </div>
+      Formul'UT
+    </a>
+    <ul class="nav-links">
+      <li><a href="../index.html">Accueil</a></li>
+      <li><a href="../voiture.html">La Voiture</a></li>
+      <li><a href="../equipe.html">L'Équipe</a></li>
+      <li><a href="../resultats.html" class="active">Résultats</a></li>
+      <li><a href="../sponsors.html">Sponsors</a></li>
+      <li><a href="../actualites.html">Actualités</a></li>
+    </ul>
+    <div class="nav-end">
+      <a href="sponsors.html" class="btn btn-primary btn-sm">Devenir partenaire</a>
+    </div>
+    <button class="nav-burger" onclick="toggleMobileMenu()" aria-label="Menu">
+      <span></span><span></span><span></span>
+    </button>
+  </div>
+</nav>
+<div class="mobile-nav" id="mobileNav">
+  <a href="../index.html" onclick="toggleMobileMenu()">Accueil</a>
+  <a href="voiture.html" onclick="toggleMobileMenu()">La Voiture</a>
+  <a href="equipe.html" onclick="toggleMobileMenu()">L'Équipe</a>
+  <a href="resultats.html" onclick="toggleMobileMenu()">Résultats</a>
+  <a href="sponsors.html" onclick="toggleMobileMenu()">Sponsors</a>
+  <a href="actualites.html" onclick="toggleMobileMenu()">Actualités</a>
+  <div class="mobile-nav-cta">
+    <a href="sponsors.html" class="btn btn-primary" style="width:100%;justify-content:center;">Devenir partenaire →</a>
+  </div>
+</div>
+
+<section class="page-hero">
+  <div class="blob blob-r1"></div>
+  <div class="container">
+    <div class="page-hero-inner">
+      <div class="page-hero-eyebrow">🏆 Résultats & Transparence</div>
+      <h1>Nos résultats.<br>Notre <span>budget</span>.</h1>
+      <p class="page-hero-sub">Le palmarès de l'écurie en compétition, et la répartition complète de notre budget — parce qu'un partenariat de confiance commence par la transparence.</p>
+    </div>
+  </div>
+  <div class="page-hero-arc"></div>
+</section>
+
+<!-- ══ RECAP CHIFFRES ══ -->
+<section class="recap-section">
+  <div class="blob recap-blob"></div>
+  <div class="container">
+    <div class="recap-grid">
+      <div class="recap-item"><div class="recap-val">6</div><div class="recap-lbl">Saisons de compétition</div></div>
+      <div class="recap-item"><div class="recap-val">12</div><div class="recap-lbl">Compétitions disputées</div></div>
+      <div class="recap-item"><div class="recap-val">Top 15</div><div class="recap-lbl">Meilleur classement général</div></div>
+      <div class="recap-item"><div class="recap-val">100%</div><div class="recap-lbl">Voitures qualifiées scrutineering</div></div>
+    </div>
+  </div>
+</section>
+
+<!-- ══ PALMARÈS ══ -->
+<section class="palmares-section">
+  <div class="container">
+    <div class="reveal">
+      <span class="eyebrow"><span class="eyebrow-dot"></span>Palmarès</span>
+      <h2 class="display-lg">Nos résultats,<br>compétition par compétition.</h2>
+    </div>
+    <div class="palmares-grid">
+      <div class="result-card reveal">
+        <div class="result-photo">
+          📷 Photo podium / piste
+          <span class="result-rank-badge">Top 15</span>
+        </div>
+        <div class="result-body">
+          <div class="result-year">Été 2025</div>
+          <div class="result-title">Formula Student Germany</div>
+          <div class="result-stats">
+            <div class="result-stat"><div class="result-stat-val">15e</div><div class="result-stat-key">Classement général</div></div>
+            <div class="result-stat"><div class="result-stat-val">89</div><div class="result-stat-key">Écuries</div></div>
+          </div>
+        </div>
+      </div>
+      <div class="result-card reveal reveal-delay-1">
+        <div class="result-photo">📷 Photo compétition</div>
+        <div class="result-body">
+          <div class="result-year">Printemps 2024</div>
+          <div class="result-title">Formula Student East</div>
+          <div class="result-stats">
+            <div class="result-stat"><div class="result-stat-val">22e</div><div class="result-stat-key">Classement général</div></div>
+            <div class="result-stat"><div class="result-stat-val">65</div><div class="result-stat-key">Écuries</div></div>
+          </div>
+        </div>
+      </div>
+      <div class="result-card reveal reveal-delay-2">
+        <div class="result-photo">📷 Photo compétition</div>
+        <div class="result-body">
+          <div class="result-year">Été 2023</div>
+          <div class="result-title">Formula Student Germany</div>
+          <div class="result-stats">
+            <div class="result-stat"><div class="result-stat-val">31e</div><div class="result-stat-key">Classement général</div></div>
+            <div class="result-stat"><div class="result-stat-val">78</div><div class="result-stat-key">Écuries</div></div>
+          </div>
+        </div>
+      </div>
+      <div class="result-card reveal">
+        <div class="result-photo">📷 Photo compétition</div>
+        <div class="result-body">
+          <div class="result-year">Été 2022</div>
+          <div class="result-title">Formula Student Czech Republic</div>
+          <div class="result-stats">
+            <div class="result-stat"><div class="result-stat-val">18e</div><div class="result-stat-key">Classement général</div></div>
+            <div class="result-stat"><div class="result-stat-val">54</div><div class="result-stat-key">Écuries</div></div>
+          </div>
+        </div>
+      </div>
+      <div class="result-card reveal reveal-delay-1">
+        <div class="result-photo">📷 Photo compétition</div>
+        <div class="result-body">
+          <div class="result-year">2021</div>
+          <div class="result-title">Première participation — FS East</div>
+          <div class="result-stats">
+            <div class="result-stat"><div class="result-stat-val">Qualifiée</div><div class="result-stat-key">Scrutineering</div></div>
+          </div>
+        </div>
+      </div>
+      <div class="result-card reveal reveal-delay-2" style="border-style:dashed;border-color:rgba(16,185,129,0.4);background:linear-gradient(135deg,#F0FDF9,var(--white));">
+        <div class="result-photo" style="background:linear-gradient(135deg,#D1FAE5,rgba(245,200,0,0.1));">⚡ FE01 — Objectif 2026</div>
+        <div class="result-body">
+          <div class="result-year">2026 — À venir</div>
+          <div class="result-title">Première sortie électrique</div>
+          <div class="result-stats"><div class="result-stat"><div class="result-stat-val">En préparation</div><div class="result-stat-key">FS East visée</div></div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ══ BUDGET ══ -->
+<section class="budget-section">
+  <div class="container">
+    <div class="budget-intro reveal">
+      <span class="eyebrow"><span class="eyebrow-dot"></span>Transparence financière</span>
+      <h2 class="display-lg">Où va votre soutien ?</h2>
+      <p class="text-muted" style="margin-top:16px;font-size:15px;line-height:1.7;">Voici la répartition indicative de notre budget annuel. Chaque euro investi par un partenaire est tracé et utilisé pour faire avancer nos deux monoplaces.</p>
+    </div>
+
+    <div class="budget-total-card reveal">
+      <div class="blob budget-total-blob"></div>
+      <div class="budget-total-label">Budget annuel de l'écurie (indicatif)</div>
+      <div class="budget-total-val">~45 000 €</div>
+      <div class="budget-total-sub">Sponsoring financier, apports en nature et subvention UTC compris</div>
+    </div>
+
+    <div class="budget-breakdown reveal reveal-delay-1">
+      <div class="budget-row">
+        <div class="budget-row-label"><div class="budget-row-icon" style="background:var(--yellow-pale);">🔩</div>Châssis & fabrication</div>
+        <div class="budget-bar-track"><div class="budget-bar-fill" style="width:30%;background:var(--yellow);"></div></div>
+        <div><div class="budget-row-pct">30%</div><div class="budget-row-amount">~13 500 €</div></div>
+      </div>
+      <div class="budget-row">
+        <div class="budget-row-label"><div class="budget-row-icon" style="background:rgba(5,150,105,0.12);">🔋</div>GMP Électrique (FE01)</div>
+        <div class="budget-bar-track"><div class="budget-bar-fill" style="width:25%;background:#10B981;"></div></div>
+        <div><div class="budget-row-pct">25%</div><div class="budget-row-amount">~11 250 €</div></div>
+      </div>
+      <div class="budget-row">
+        <div class="budget-row-label"><div class="budget-row-icon" style="background:rgba(234,88,12,0.12);">🔥</div>GMP Thermique (FS01)</div>
+        <div class="budget-bar-track"><div class="budget-bar-fill" style="width:15%;background:#EA580C;"></div></div>
+        <div><div class="budget-row-pct">15%</div><div class="budget-row-amount">~6 750 €</div></div>
+      </div>
+      <div class="budget-row">
+        <div class="budget-row-label"><div class="budget-row-icon" style="background:var(--blue-pale);">🏁</div>Compétitions & déplacements</div>
+        <div class="budget-bar-track"><div class="budget-bar-fill" style="width:18%;background:var(--blue);"></div></div>
+        <div><div class="budget-row-pct">18%</div><div class="budget-row-amount">~8 100 €</div></div>
+      </div>
+      <div class="budget-row">
+        <div class="budget-row-label"><div class="budget-row-icon" style="background:rgba(13,13,26,0.06);">⚡</div>Électronique & data</div>
+        <div class="budget-bar-track"><div class="budget-bar-fill" style="width:7%;background:var(--ink-40);"></div></div>
+        <div><div class="budget-row-pct">7%</div><div class="budget-row-amount">~3 150 €</div></div>
+      </div>
+      <div class="budget-row">
+        <div class="budget-row-label"><div class="budget-row-icon" style="background:rgba(245,200,0,0.2);">📢</div>Communication & administratif</div>
+        <div class="budget-bar-track"><div class="budget-bar-fill" style="width:5%;background:var(--yellow-dark);"></div></div>
+        <div><div class="budget-row-pct">5%</div><div class="budget-row-amount">~2 250 €</div></div>
+      </div>
+    </div>
+
+    <div class="budget-note reveal reveal-delay-2">
+      <div class="budget-note-icon">📊</div>
+      <p>Les sponsors Or reçoivent un rapport d'activité annuel détaillant précisément l'utilisation de leur contribution. Une transparence totale, poste par poste.</p>
+    </div>
+  </div>
+</section>
+
+<footer class="footer">
+  <div class="container">
+    <div class="footer-grid">
+      <div class="footer-brand">
+        <div class="footer-logo-text">Formul'<span>UT</span></div>
+        <p>Écurie Formula Student de l'Université de Technologie de Compiègne. 100% étudiant, 100% piste.</p>
+        <div class="footer-social">
+          <a href="#" class="social-pill">in LinkedIn</a>
+          <a href="#" class="social-pill">📸 Insta</a>
+          <a href="#" class="social-pill">▶ YouTube</a>
+        </div>
+      </div>
+      <div class="footer-col">
+        <h4>L'écurie</h4>
+        <ul>
+          <li><a href="voiture.html">La Voiture</a></li>
+          <li><a href="equipe.html">L'Équipe</a></li>
+          <li><a href="resultats.html">Résultats</a></li>
+          <li><a href="actualites.html">Actualités</a></li>
+        </ul>
+      </div>
+      <div class="footer-col">
+        <h4>Partenariat</h4>
+        <ul>
+          <li><a href="sponsors.html">Devenir sponsor</a></li>
+          <li><a href="../assets/dossier-sponsoring.pdf">Dossier PDF</a></li>
+          <li><a href="contact.html">Nous contacter</a></li>
+        </ul>
+      </div>
+      <div class="footer-col">
+        <h4>Contact</h4>
+        <ul>
+          <li><a href="mailto:contact@formul-ut.fr">contact@formul-ut.fr</a></li>
+          <li><a href="tel:+33300000000">+33 3 00 00 00 00</a></li>
+          <li><a href="#">UTC, Compiègne</a></li>
+        </ul>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <p>© 2026 Formul'UT — Écurie Formula Student, Association loi 1901</p>
+      <p>Université de Technologie de Compiègne</p>
+    </div>
+  </div>
+</footer>
+
+<script>
+(function () {
+  const nav = document.getElementById('navbar');
+  if (!nav) return;
+  function updateNav() {
+    if (window.scrollY > 40) { nav.classList.add('solid'); nav.classList.remove('transparent'); }
+    else { nav.classList.remove('solid'); nav.classList.add('transparent'); }
+  }
+  window.addEventListener('scroll', updateNav, { passive: true });
+  updateNav();
+})();
+
+function toggleMobileMenu() {
+  const menu = document.getElementById('mobileNav');
+  if (menu) menu.classList.toggle('open');
+}
+document.addEventListener('click', e => {
+  const menu = document.getElementById('mobileNav');
+  const burger = document.querySelector('.nav-burger');
+  if (menu && burger && !menu.contains(e.target) && !burger.contains(e.target)) menu.classList.remove('open');
+});
+
+(function () {
+  const els = document.querySelectorAll('.reveal');
+  if (!els.length) return;
+  const obs = new IntersectionObserver(entries => {
+    entries.forEach(e => { if (e.isIntersecting) { e.target.classList.add('visible'); obs.unobserve(e.target); } });
+  }, { threshold: 0.1 });
+  els.forEach(el => obs.observe(el));
+})();
+
+function animateCounters() {
+  document.querySelectorAll('[data-count]').forEach(el => {
+    const target = parseFloat(el.dataset.count);
+    const suffix = el.dataset.suffix || '';
+    const duration = 1600;
+    let start = null;
+    function step(ts) {
+      if (!start) start = ts;
+      const p = Math.min((ts - start) / duration, 1);
+      const eased = 1 - Math.pow(1 - p, 3);
+      el.textContent = Math.floor(eased * target) + suffix;
+      if (p < 1) requestAnimationFrame(step);
+    }
+    requestAnimationFrame(step);
+  });
+}
+(function () {
+  const section = document.querySelector('.stats-section');
+  if (!section) return;
+  const obs = new IntersectionObserver(entries => { if (entries[0].isIntersecting) { animateCounters(); obs.disconnect(); } }, { threshold: 0.5 });
+  obs.observe(section);
+})();
+
+</script>
+</body>
+</html>
