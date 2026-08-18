@@ -6,6 +6,9 @@
   <title>Contact — Formul'UT</title>
   <meta name="description" content="Contactez l'écurie Formul'UT : formulaire, téléphone, ou prise de rendez-vous direct." />
   <link rel="stylesheet" href="../css/style.css" />
+  <!-- À placer avant votre propre fichier script.js -->
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="script.js" defer></script> 
 </head>
 <body>
 
@@ -56,25 +59,28 @@
 
 <!-- Section Formulaire Contact -->
 <section class="section">
-  <div class="container">
-    <div style="max-width: 600px; margin: 0 auto; background: var(--white); padding: 36px; border-radius: var(--radius-xl); border: 1.5px solid var(--ink-06); box-shadow: var(--shadow-sm);">
-      <form action="#" method="POST" style="display: flex; flex-direction: column; gap: 20px;">
-        <div>
-          <label style="display: block; font-family: var(--font-display); font-weight: 700; margin-bottom: 8px;">Nom complet</label>
-          <input type="text" placeholder="Votre nom" required style="width: 100%; padding: 12px 16px; border-radius: var(--radius-sm); border: 1.5px solid var(--ink-12); font-family: inherit;" />
-        </div>
-        <div>
-          <label style="display: block; font-family: var(--font-display); font-weight: 700; margin-bottom: 8px;">Email</label>
-          <input type="email" placeholder="votre.email@exemple.com" required style="width: 100%; padding: 12px 16px; border-radius: var(--radius-sm); border: 1.5px solid var(--ink-12); font-family: inherit;" />
-        </div>
-        <div>
-          <label style="display: block; font-family: var(--font-display); font-weight: 700; margin-bottom: 8px;">Message</label>
-          <textarea rows="5" placeholder="Votre message..." required style="width: 100%; padding: 12px 16px; border-radius: var(--radius-sm); border: 1.5px solid var(--ink-12); font-family: inherit; resize: vertical;"></textarea>
-        </div>
-        <button type="submit" class="btn btn-blue btn-lg" style="justify-content: center;">Envoyer le message</button>
-      </form>
-    </div>
+  <!-- Formulaire de contact Sponsor -->
+<form id="form-sponsor" class="sponsor-form">
+  <div class="form-group">
+    <label for="nom">Nom / Entreprise :</label>
+    <input type="text" id="nom" name="nom" required placeholder="Ex: Jean Dupont / Société ACME">
   </div>
+
+  <div class="form-group">
+    <label for="email">E-mail :</label>
+    <input type="email" id="email" name="email" required placeholder="nom@exemple.com">
+  </div>
+
+  <div class="form-group">
+    <label for="message">Message :</label>
+    <textarea id="message" name="message" rows="5" required placeholder="Votre message ou proposition de partenariat..."></textarea>
+  </div>
+
+  <button type="submit" id="btn-submit">Envoyer la demande</button>
+  
+  <!-- Zone pour afficher les messages de confirmation ou d'erreur -->
+  <p id="form-status" style="margin-top: 10px; font-weight: bold;"></p>
+  </form>
 </section>
 
 <footer class="footer">
@@ -102,7 +108,7 @@
         <h4>Partenariat</h4>
         <ul>
           <li><a href="sponsors.html">Devenir sponsor</a></li>
-          <li><a href="../assets/dossier-sponsoring.pdf">Dossier PDF</a></li>
+          <li><a href="../assets/dossier_sponso.pdf">Dossier PDF</a></li>
           <li><a href="contact.html">Nous contacter</a></li>
         </ul>
       </div>
