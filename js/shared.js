@@ -61,7 +61,6 @@ const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBh
 
 // Initialisation du client
 const supabaseClient = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
-
 // Détection de l'élément formulaire sur la page
 document.addEventListener('DOMContentLoaded', () => {
   const sponsorForm = document.getElementById('form-sponsor');
@@ -88,8 +87,8 @@ document.addEventListener('DOMContentLoaded', () => {
       try {
         // Envoi à la table SQL 'sponsors'
         const { data, error } = await supabaseClient
-          .from('sponsors')
-          .insert([{ nom: nom, email: email, message: message }]);
+  .from('sponsors')
+  .insert([{ nom: nom, email: email, message: message }]);
 
         if (error) throw error;
 

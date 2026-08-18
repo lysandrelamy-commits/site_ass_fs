@@ -502,6 +502,53 @@ h1, h2, h3, h4 { font-family: var(--font-display); line-height: 1.1; }
 .cta-block-text p { color: rgba(255,255,255,0.6); font-size: 16px; max-width: 480px; position: relative; z-index: 1; }
 .cta-block-actions { display: flex; flex-direction: column; gap: 12px; flex-shrink: 0; position: relative; z-index: 1; }
 
+/* ==========================================
+   AJUSTEMENTS FORMULAIRE SPONSOR
+   ========================================== */
+
+/* Carte centrée avec padding et bordure colorée */
+.sponsor-card-custom {
+  width: 100%;
+  max-width: 580px;
+  padding: 40px;
+  background: var(--white);
+  border: 2px solid var(--blue-pale);
+  box-shadow: var(--shadow-md);
+}
+
+/* Stylisation des labels avec la typographie Outfit et la couleur Bleue du site */
+.form-group label {
+  font-family: var(--font-display);
+  font-size: 14px;
+  font-weight: 700;
+  color: var(--blue);
+  margin-bottom: 8px;
+  display: block;
+}
+
+/* Champs de saisie colorés et bordures interactives */
+.sponsor-input {
+  width: 100%;
+  padding: 14px 18px;
+  font-family: var(--font-body);
+  font-size: 15px;
+  color: var(--ink);
+  background: var(--cream);
+  border: 1.5px solid var(--ink-12);
+  border-radius: var(--radius-md);
+  outline: none;
+  transition: all 0.25s ease;
+}
+
+/* Effet au survol et au clic sur les champs */
+.sponsor-input:focus {
+  background: var(--yellow-pale);
+  border-color: var(--yellow-dark);
+  box-shadow: 0 0 0 4px rgba(245, 200, 0, 0.2);
+}
+
 @media (max-width: 1000px) { .level-card { grid-template-columns: 1fr; gap: 24px; } }
 @media (max-width: 900px) { .direct-contact-grid { grid-template-columns: 1fr; } .budget-teaser-card { grid-template-columns: 1fr; } }
 @media (max-width: 700px) { .why-grid { grid-template-columns: 1fr; } .cta-block { grid-template-columns: 1fr; } .hero-numbers { gap: 28px; } }
+
+

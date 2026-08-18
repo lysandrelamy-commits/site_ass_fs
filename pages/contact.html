@@ -59,38 +59,43 @@
 
 <!-- Section Formulaire Contact -->
 <section class="section">
-  <div class="container">
+  <div class="container" style="display: flex; flex-direction: column; align-items: center;">
     
-    <!-- En-tête utilisant vos classes typographiques existantes -->
-    <div style="text-align: center; margin-bottom: 40px;">
-      <span class="eyebrow"><span class="eyebrow-dot"></span>Partenariat</span>
+    <!-- En-tête centré avec badge et titre aux couleurs du site -->
+    <div style="text-align: center; margin-bottom: 40px; max-width: 600px;">
+      <span class="eyebrow">
+        <span class="eyebrow-dot"></span>Partenariat
+      </span>
       <h2 class="display-lg text-blue">Devenir Sponsor</h2>
+      <p class="text-muted" style="margin-top: 12px;">
+        Soutenez notre projet et rejoignez l'aventure Formula Student à nos côtés.
+      </p>
     </div>
 
-    <!-- Formulaire utilisant la carte et vos boutons existants -->
-    <form id="form-sponsor" class="sponsor-form-card">
+    <!-- Carte du formulaire : réutilisation de la classe news-card pour les coins et l'ombre -->
+    <form id="form-sponsor" class="news-card sponsor-card-custom">
       
       <div class="form-group">
         <label for="nom">Nom / Entreprise</label>
-        <input type="text" id="nom" class="form-control" placeholder="Ex: Jean Dupont" required>
+        <input type="text" id="nom" class="sponsor-input" placeholder="Ex: Jean Dupont / Entreprise" required>
       </div>
 
       <div class="form-group">
         <label for="email">Adresse e-mail</label>
-        <input type="email" id="email" class="form-control" placeholder="nom@exemple.com" required>
+        <input type="email" id="email" class="sponsor-input" placeholder="nom@exemple.com" required>
       </div>
 
       <div class="form-group">
         <label for="message">Message</label>
-        <textarea id="message" class="form-control" rows="5" placeholder="Votre message..." required></textarea>
+        <textarea id="message" class="sponsor-input" rows="5" placeholder="Votre message ou proposition de partenariat..." required></textarea>
       </div>
 
-      <!-- Réutilisation directe de vos classes .btn .btn-blue .btn-lg -->
-      <button type="submit" id="btn-submit" class="btn btn-blue btn-lg btn-full">
+      <!-- Bouton Jaune / Bleu réutilisant .btn-primary -->
+      <button type="submit" id="btn-submit" class="btn btn-primary btn-lg" style="width: 100%; justify-content: center; margin-top: 10px;">
         Envoyer la demande
       </button>
 
-      <p id="form-status" style="text-align: center; margin-top: 16px; font-weight: 600;"></p>
+      <p id="form-status" style="text-align: center; margin-top: 16px; font-weight: 700; font-family: var(--font-display);"></p>
     </form>
 
   </div>
